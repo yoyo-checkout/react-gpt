@@ -1,10 +1,10 @@
-import React from 'react'
+import { FC } from 'react'
 
 interface Props {
   className?: string
 }
 
-export const Logo: React.FC<Props> = ({ className }) => {
+export const Logo: FC<Props> = ({ className }) => {
   return (
     <svg
       className={className}
