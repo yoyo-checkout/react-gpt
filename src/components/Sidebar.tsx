@@ -1,9 +1,14 @@
+import dayjs from 'dayjs'
+import { groupBy } from 'lodash-es'
 import { Edit } from '@/components/image/Edit'
 import { Logo } from '@/components/image/Logo'
 import { More } from '@/components/image/More'
 import { Seal } from '@/components/image/Seal'
+import { chats } from '@/config/chats'
 
 export function Sidebar() {
+  const chatsGroupByTime = groupBy(chats, (c) => dayjs(c.create_at).fromNow())
+
   return (
     <div className="hidden md:block flex-shrink-0 overflow-x-hidden bg-token-sidebar-surface-primary w-[260px]">
       <div className="flex h-full min-h-0 flex-col">
@@ -30,35 +35,37 @@ export function Sidebar() {
                 </div>
               </div>
               <div className="flex flex-col gap-2 pb-2 text-token-text-primary text-sm">
-                {Array.from(Array(10).keys()).map((i) => (
-                  <div className="relative mt-5 empty:mt-0 empty:hidden" key={i}>
+                {Object.entries(chatsGroupByTime).map(([time, chats]) => (
+                  <div key={time} className="relative mt-5 empty:mt-0 empty:hidden">
                     <div>
                       <h3 className="h-9 pb-2 pt-3 px-2 text-xs font-medium text-ellipsis overflow-hidden break-all text-token-text-tertiary">
-                        今天
+                        {time}
                       </h3>
                     </div>
                     <ol>
-                      <li className="relative z-[15] overflow-hidden">
-                        <div className="group relative rounded-lg active:opacity-90 hover:bg-token-sidebar-surface-secondary">
-                          <a href="/" className="flex items-center gap-2 p-2">
-                            <div className="relative grow overflow-hidden whitespace-nowrap">
-                              Add className to Logo
-                              <div className="absolute bottom-0 right-0 top-0 bg-gradient-to-l to-transparent from-token-sidebar-surface-primary group-hover:from-token-sidebar-surface-secondary w-8 from-0% group-hover:w-20 group-hover:from-60%"></div>
+                      {chats.map((chat, i) => (
+                        <li key={i} className="relative z-[15] overflow-hidden">
+                          <div className="group relative rounded-lg active:opacity-90 hover:bg-token-sidebar-surface-secondary">
+                            <a href="/" className="flex items-center gap-2 p-2">
+                              <div className="relative grow overflow-hidden whitespace-nowrap">
+                                {chat.name}
+                                <div className="absolute bottom-0 right-0 top-0 bg-gradient-to-l to-transparent from-token-sidebar-surface-primary group-hover:from-token-sidebar-surface-secondary w-8 from-0% group-hover:w-20 group-hover:from-60%"></div>
+                              </div>
+                            </a>
+                            <div className="absolute bottom-0 right-0 top-0 items-center gap-1.5 pr-2 hidden group-hover:flex">
+                              <button
+                                className="flex items-center justify-center text-token-text-primary transition hover:text-token-text-secondary radix-state-open:text-token-text-secondary"
+                                type="button"
+                              >
+                                <More className="icon-md" />
+                              </button>
+                              <button className="flex items-center justify-center text-token-text-primary transition hover:text-token-text-secondary radix-state-open:text-token-text-secondary">
+                                <Seal className="icon-md" />
+                              </button>
                             </div>
-                          </a>
-                          <div className="absolute bottom-0 right-0 top-0 items-center gap-1.5 pr-2 hidden group-hover:flex">
-                            <button
-                              className="flex items-center justify-center text-token-text-primary transition hover:text-token-text-secondary radix-state-open:text-token-text-secondary"
-                              type="button"
-                            >
-                              <More className="icon-md" />
-                            </button>
-                            <button className="flex items-center justify-center text-token-text-primary transition hover:text-token-text-secondary radix-state-open:text-token-text-secondary">
-                              <Seal className="icon-md" />
-                            </button>
                           </div>
-                        </div>
-                      </li>
+                        </li>
+                      ))}
                     </ol>
                   </div>
                 ))}

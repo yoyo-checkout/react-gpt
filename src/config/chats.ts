@@ -30,7 +30,7 @@ export const chats: Chat[] = [
   {
     id: '250a6eda-2368-4085-b6c0-88242558614c',
     name: 'React Map Elements',
-    create_at: 1318781876,
+    create_at: 1713113481000,
     status: 'available',
     conversations: [
       {
@@ -92,7 +92,7 @@ export default App;`,
   {
     id: '98f5d897-d6eb-4bac-8acf-f1c11e6e5b0a',
     name: 'Add className to Logo',
-    create_at: 1318781876,
+    create_at: 1712678400000,
     status: 'available',
     conversations: [
       {
