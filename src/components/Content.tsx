@@ -302,7 +302,7 @@ export const Content = () => {
                 <div className="overflow-hidden [&:has(textarea:focus)]:border-token-border-xheavy [&:has(textarea:focus)]:shadow-[0_2px_6px_rgba(0,0,0,.05)] flex flex-col w-full flex-grow relative border dark:text-white rounded-2xl bg-token-main-surface-primary border-token-border-medium">
                   <textarea
                     placeholder="傳訊息給 ChatGPT……"
-                    className="m-0 w-full resize-none border-0 bg-transparent focus:ring-0 focus-visible:ring-0 dark:bg-transparent py-[10px] pr-10 md:py-3.5 md:pr-12 max-h-[25dvh] h-[52px] overflow-y-hidden placeholder-black/50 dark:placeholder-white/50 pl-3 md:pl-4"
+                    className="outline-none m-0 w-full resize-none border-0 bg-transparent focus:ring-0 focus-visible:ring-0 dark:bg-transparent py-[10px] pr-10 md:py-3.5 md:pr-12 max-h-[25dvh] h-[52px] overflow-y-hidden placeholder-black/50 dark:placeholder-white/50 pl-3 md:pl-4"
                   ></textarea>
                   <button
                     disabled

@@ -5,7 +5,7 @@ import { Seal } from '@/components/image/Seal'
 
 export function Sidebar() {
   return (
-    <div className="flex-shrink-0 overflow-x-hidden bg-token-sidebar-surface-primary w-[260px]">
+    <div className="hidden md:block flex-shrink-0 overflow-x-hidden bg-token-sidebar-surface-primary w-[260px]">
       <div className="flex h-full min-h-0 flex-col">
         <div className="scrollbar-trigger relative h-full w-full flex-1 items-start border-white/20">
           <nav className="flex h-full w-full flex-col px-3 pb-3.5">
