@@ -29,3 +29,7 @@ body,
 #root {
   @apply h-full;
 }
+
+body {
+  background-color: var(--main-surface-primary);
+}

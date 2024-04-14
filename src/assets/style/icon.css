@@ -1,0 +1,9 @@
+.icon-md {
+  @apply h-[18px] w-[18px] shrink-0;
+}
+.icon-sm {
+  stroke-width: 2;
+  flex-shrink: 0;
+  height: 1rem;
+  width: 1rem;
+}

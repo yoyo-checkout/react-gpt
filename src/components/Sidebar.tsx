@@ -23,7 +23,7 @@ export function Sidebar() {
                     </div>
                     <div className="flex items-center">
                       <button className="text-token-text-primary">
-                        <Edit className="w-[18px] h-[18px]" />
+                        <Edit className="icon-md" />
                       </button>
                     </div>
                   </a>
@@ -51,10 +51,10 @@ export function Sidebar() {
                               className="flex items-center justify-center text-token-text-primary transition hover:text-token-text-secondary radix-state-open:text-token-text-secondary"
                               type="button"
                             >
-                              <More className="w-[18px] h-[18px]" />
+                              <More className="icon-md" />
                             </button>
                             <button className="flex items-center justify-center text-token-text-primary transition hover:text-token-text-secondary radix-state-open:text-token-text-secondary">
-                              <Seal className="w-[18px] h-[18px]" />
+                              <Seal className="icon-md" />
                             </button>
                           </div>
                         </div>
