@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
+import { useTitle } from 'react-use'
 import { Conversation } from '@/components/Chat/Conversation'
 import { chats } from '@/configs/chats'
 import { mittBus } from '@/plugins/mitt'
@@ -8,6 +9,9 @@ export const Chat = () => {
   const params = useParams()
   const _chat = chats.find((c) => c.id === params.id)
   if (!_chat) return <Navigate to="/" replace />
+
+  const [chat, setChat] = useState(_chat)
+  useTitle(chat.name)
 
   const updateChat = (content: string) => {
     setChat((c) => {
@@ -20,11 +24,12 @@ export const Chat = () => {
       return { ...c, conversations: newConversations }
     })
   }
-  const [chat, setChat] = useState(_chat)
+
   useEffect(() => {
+    setChat(_chat)
     mittBus.on('updateChat', updateChat)
     return () => mittBus.off('updateChat', updateChat)
-  }, [chat])
+  }, [_chat])
 
   return chat.conversations.map((c, conversionIndex) => <Conversation key={conversionIndex} conversation={c} />)
 }
