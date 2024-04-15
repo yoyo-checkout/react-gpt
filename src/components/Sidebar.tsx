@@ -7,6 +7,7 @@ import { Logo } from '@/components/image/Logo'
 import { More } from '@/components/image/More'
 import { Seal } from '@/components/image/Seal'
 import { Chat as TChat } from '@/configs/chats'
+import { useBreakpoint } from '@/hooks/useBreakpoint'
 import { mittBus } from '@/plugins/mitt'
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 
 export const Sidebar: FC<Props> = ({ chats, visible }) => {
   const chatsGroupByTime = useMemo(() => groupBy(chats, (c) => dayjs(c.create_at).fromNow()), [chats])
+  const breakpoint = useBreakpoint()
 
   return (
     <div
@@ -85,7 +87,7 @@ export const Sidebar: FC<Props> = ({ chats, visible }) => {
                             <NavLink
                               to={`/c/${chat.id}`}
                               className="flex items-center gap-2 p-2"
-                              onClick={() => mittBus.emit('toggleSidebar')}
+                              onClick={() => breakpoint === 'sm' && mittBus.emit('toggleSidebar')}
                             >
                               <div className="relative grow overflow-hidden whitespace-nowrap">
                                 {chat.name}
