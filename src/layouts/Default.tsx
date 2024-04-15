@@ -1,26 +1,46 @@
-import { useEffect, useRef } from 'react'
+import { throttle } from 'lodash-es'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Outlet } from 'react-router-dom'
+import { useScroll } from 'react-use'
 import { Header } from '@/components/Header'
 import { Sidebar } from '@/components/Sidebar'
 import { Textarea } from '@/components/Textarea'
 import { mittBus } from '@/plugins/mitt'
 
 export const Layout = () => {
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const scrollBottomRef = useRef<HTMLDivElement | null>(null)
+  const [scrollBottomBtnVisible, setScrollBottomBtnVisible] = useState(false)
+
+  const { y } = useScroll(containerRef)
 
   const scrollToBottom = () => {
-    const container = scrollRef.current
-    if (!container) return
+    const bottomCursor = scrollBottomRef.current
+    if (!bottomCursor) return
 
     setTimeout(() => {
-      container.scrollIntoView({ behavior: 'smooth' })
+      bottomCursor.scrollIntoView({ behavior: 'smooth' })
     }, 0)
   }
+
+  const throttleUpdateVisible = useCallback(
+    throttle((v: boolean) => setScrollBottomBtnVisible(v), 300),
+    [],
+  )
 
   useEffect(() => {
     mittBus.on('scroll2Bottom', scrollToBottom)
     return () => mittBus.off('scroll2Bottom', scrollToBottom)
   })
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const threshold = 50
+    const distance = container.scrollHeight - container.clientHeight - container.scrollTop
+    throttleUpdateVisible(distance > threshold)
+  }, [y])
 
   const addTheme = (theme: string) => document.querySelector('html')?.classList.add(theme)
   addTheme('dark')
@@ -47,7 +67,7 @@ export const Layout = () => {
           <div className="flex h-full flex-col">
             <div className="flex-1 overflow-hidden">
               <div className="h-full">
-                <div className="h-full w-full overflow-y-scroll">
+                <div ref={containerRef} className="h-full w-full overflow-y-scroll">
                   <div className="flex flex-col text-sm pb-9 relative">
                     <div className="hidden sticky top-0 mb-1.5 md:flex items-center justify-between z-10 h-14 p-2 font-semibold bg-token-main-surface-primary">
                       <div className="absolute left-1/2 -translate-x-1/2"></div>
@@ -98,22 +118,30 @@ export const Layout = () => {
                     </div>
 
                     <Outlet />
-                    <div ref={scrollRef}></div>
+                    <div ref={scrollBottomRef}></div>
                   </div>
-                  <button
-                    className="cursor-pointer absolute z-10 rounded-full bg-clip-padding border text-token-text-secondary border-token-border-light left-1/2 bg-token-main-surface-primary bottom-24 -translate-x-1/2"
-                    onClick={scrollToBottom}
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="m-1 text-token-text-primary">
-                      <path
-                        d="M17 13L12 18L7 13M12 6L12 17"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      ></path>
-                    </svg>
-                  </button>
+                  {scrollBottomBtnVisible ? (
+                    <button
+                      className="cursor-pointer absolute z-10 rounded-full bg-clip-padding border text-token-text-secondary border-token-border-light left-1/2 bg-token-main-surface-primary bottom-24 -translate-x-1/2"
+                      onClick={scrollToBottom}
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        className="m-1 text-token-text-primary"
+                      >
+                        <path
+                          d="M17 13L12 18L7 13M12 6L12 17"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        ></path>
+                      </svg>
+                    </button>
+                  ) : null}
                 </div>
               </div>
             </div>
