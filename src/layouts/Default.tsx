@@ -1,9 +1,27 @@
+import { useEffect, useRef } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Header } from '@/components/Header'
 import { Sidebar } from '@/components/Sidebar'
 import { Textarea } from '@/components/Textarea'
+import { mittBus } from '@/plugins/mitt'
 
 export const Layout = () => {
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  const scrollToBottom = () => {
+    const container = scrollRef.current
+    if (!container) return
+
+    setTimeout(() => {
+      container.scrollIntoView({ behavior: 'smooth' })
+    }, 0)
+  }
+
+  useEffect(() => {
+    mittBus.on('scroll2Bottom', scrollToBottom)
+    return () => mittBus.off('scroll2Bottom', scrollToBottom)
+  })
+
   const addTheme = (theme: string) => document.querySelector('html')?.classList.add(theme)
   addTheme('dark')
 
@@ -14,7 +32,7 @@ export const Layout = () => {
         <Header />
 
         <main className="relative h-full w-full flex-1 overflow-auto transition-width">
-          <div className="fixed left-0 top-1/2 z-40 translate-x-[260px] -translate-y-1/2">
+          <div className="hidden md:block fixed left-0 top-1/2 z-40 translate-x-[260px] -translate-y-1/2">
             <button>
               <div className="flex h-[72px] w-8 items-center justify-center">
                 <div className="flex h-6 w-6 flex-col items-center">
@@ -80,25 +98,22 @@ export const Layout = () => {
                     </div>
 
                     <Outlet />
-
-                    <button className="cursor-pointer absolute z-10 rounded-full bg-clip-padding border text-token-text-secondary border-token-border-light right-1/2 bg-token-main-surface-primary bottom-5">
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        className="m-1 text-token-text-primary"
-                      >
-                        <path
-                          d="M17 13L12 18L7 13M12 6L12 17"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        ></path>
-                      </svg>
-                    </button>
+                    <div ref={scrollRef}></div>
                   </div>
+                  <button
+                    className="cursor-pointer absolute z-10 rounded-full bg-clip-padding border text-token-text-secondary border-token-border-light left-1/2 bg-token-main-surface-primary bottom-24 -translate-x-1/2"
+                    onClick={scrollToBottom}
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="m-1 text-token-text-primary">
+                      <path
+                        d="M17 13L12 18L7 13M12 6L12 17"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></path>
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
