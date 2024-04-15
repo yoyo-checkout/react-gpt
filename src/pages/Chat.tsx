@@ -1,8 +1,12 @@
-import { chats } from '@/config/chats'
-import { Conversation } from './Conversation'
+import { Navigate, useParams } from 'react-router-dom'
+import { Conversation } from '@/components/Chat/Conversation'
+import { chats } from '@/configs/chats'
 
-export const Content = () => {
-  const chat = chats[0]
+export const Chat = () => {
+  const params = useParams()
+  const chat = chats.find((c) => c.id === params.id)
+
+  if (!chat) return <Navigate to="/" replace />
 
   return (
     <main className="relative h-full w-full flex-1 overflow-auto transition-width">

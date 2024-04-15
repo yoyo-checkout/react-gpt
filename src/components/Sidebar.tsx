@@ -1,10 +1,11 @@
 import dayjs from 'dayjs'
 import { groupBy } from 'lodash-es'
+import { NavLink } from 'react-router-dom'
 import { Edit } from '@/components/image/Edit'
 import { Logo } from '@/components/image/Logo'
 import { More } from '@/components/image/More'
 import { Seal } from '@/components/image/Seal'
-import { chats } from '@/config/chats'
+import { chats } from '@/configs/chats'
 
 export function Sidebar() {
   const chatsGroupByTime = groupBy(chats, (c) => dayjs(c.create_at).fromNow())
@@ -17,7 +18,10 @@ export function Sidebar() {
             <div className="flex-col flex-1 transition-opacity duration-500 -mr-2 pr-2 overflow-y-auto">
               <div className="sticky left-0 right-0 top-0 z-20 bg-token-sidebar-surface-primary pt-3.5">
                 <div className="pb-0.5 last:pb-0">
-                  <a className="group flex h-10 items-center gap-2 rounded-lg bg-token-sidebar-surface-primary px-2 font-medium hover:bg-token-sidebar-surface-secondary cursor-pointer">
+                  <NavLink
+                    to="/"
+                    className="group flex h-10 items-center gap-2 rounded-lg bg-token-sidebar-surface-primary px-2 font-medium hover:bg-token-sidebar-surface-secondary cursor-pointer"
+                  >
                     <div className="h-7 w-7 flex-shrink-0">
                       <div className="relative flex h-full items-center justify-center rounded-full bg-white text-gray-950">
                         <Logo className="h-2/3 w-2/3" />
@@ -31,7 +35,7 @@ export function Sidebar() {
                         <Edit className="icon-md" />
                       </button>
                     </div>
-                  </a>
+                  </NavLink>
                 </div>
               </div>
               <div className="flex flex-col gap-2 pb-2 text-token-text-primary text-sm">
@@ -46,12 +50,12 @@ export function Sidebar() {
                       {chats.map((chat, i) => (
                         <li key={i} className="relative z-[15] overflow-hidden">
                           <div className="group relative rounded-lg active:opacity-90 hover:bg-token-sidebar-surface-secondary">
-                            <a href="/" className="flex items-center gap-2 p-2">
+                            <NavLink to={`/c/${chat.id}`} className="flex items-center gap-2 p-2">
                               <div className="relative grow overflow-hidden whitespace-nowrap">
                                 {chat.name}
                                 <div className="absolute bottom-0 right-0 top-0 bg-gradient-to-l to-transparent from-token-sidebar-surface-primary group-hover:from-token-sidebar-surface-secondary w-8 from-0% group-hover:w-20 group-hover:from-60%"></div>
                               </div>
-                            </a>
+                            </NavLink>
                             <div className="absolute bottom-0 right-0 top-0 items-center gap-1.5 pr-2 hidden group-hover:flex">
                               <button
                                 className="flex items-center justify-center text-token-text-primary transition hover:text-token-text-secondary radix-state-open:text-token-text-secondary"

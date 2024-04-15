@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Logo } from '@/components/image/Logo'
-import { Conversation as TConversation, Message as TMessage } from '@/config/chats'
+import { Conversation as TConversation, Message as TMessage } from '@/configs/chats'
 import { Highlight } from './Highlight'
 
 interface AvatarProps {
