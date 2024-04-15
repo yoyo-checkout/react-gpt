@@ -1,24 +1,51 @@
 import dayjs from 'dayjs'
 import { groupBy } from 'lodash-es'
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Edit } from '@/components/image/Edit'
 import { Logo } from '@/components/image/Logo'
 import { More } from '@/components/image/More'
 import { Seal } from '@/components/image/Seal'
 import { Chat as TChat } from '@/configs/chats'
+import { mittBus } from '@/plugins/mitt'
 
 interface Props {
   chats: TChat[]
+  visible: boolean
 }
 
-export const Sidebar: FC<Props> = ({ chats }) => {
-  const chatsGroupByTime = groupBy(chats, (c) => dayjs(c.create_at).fromNow())
+export const Sidebar: FC<Props> = ({ chats, visible }) => {
+  const chatsGroupByTime = useMemo(() => groupBy(chats, (c) => dayjs(c.create_at).fromNow()), [chats])
 
   return (
-    <div className="hidden md:block flex-shrink-0 overflow-x-hidden bg-token-sidebar-surface-primary w-[260px]">
-      <div className="flex h-full min-h-0 flex-col">
-        <div className="scrollbar-trigger relative h-full w-full flex-1 items-start border-white/20">
+    <div
+      className={`fixed h-full md:relative z-20 md:block flex-shrink-0 overflow-x-hidden transition-[width] duration-500 ${visible ? 'w-full md:w-[260px]' : 'w-0'}`}
+    >
+      <div className="flex h-full min-h-0 flex-row md:flex-col">
+        <div className="scrollbar-trigger relative h-full w-full flex-1 items-start bg-token-sidebar-surface-primary border-white/20">
+          <div className="md:hidden absolute right-0 top-0 z-10 -mr-12 pt-3.5">
+            <button
+              className="ml-1 flex h-10 w-10 items-center justify-center text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              onClick={() => mittBus.emit('toggleSidebar')}
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="icon-md"
+              >
+                <path
+                  d="M6.34315 6.34338L17.6569 17.6571M17.6569 6.34338L6.34315 17.6571"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></path>
+              </svg>
+            </button>
+          </div>
           <nav className="flex h-full w-full flex-col px-3 pb-3.5">
             <div className="flex-col flex-1 transition-opacity duration-500 -mr-2 pr-2 overflow-y-auto">
               <div className="sticky left-0 right-0 top-0 z-20 bg-token-sidebar-surface-primary pt-3.5">
@@ -55,7 +82,11 @@ export const Sidebar: FC<Props> = ({ chats }) => {
                       {chats.map((chat, i) => (
                         <li key={i} className="relative z-[15] overflow-hidden">
                           <div className="group relative rounded-lg active:opacity-90 hover:bg-token-sidebar-surface-secondary">
-                            <NavLink to={`/c/${chat.id}`} className="flex items-center gap-2 p-2">
+                            <NavLink
+                              to={`/c/${chat.id}`}
+                              className="flex items-center gap-2 p-2"
+                              onClick={() => mittBus.emit('toggleSidebar')}
+                            >
                               <div className="relative grow overflow-hidden whitespace-nowrap">
                                 {chat.name}
                                 <div className="absolute bottom-0 right-0 top-0 bg-gradient-to-l to-transparent from-token-sidebar-surface-primary group-hover:from-token-sidebar-surface-secondary w-8 from-0% group-hover:w-20 group-hover:from-60%"></div>
@@ -139,6 +170,10 @@ export const Sidebar: FC<Props> = ({ chats }) => {
             </div>
           </nav>
         </div>
+        <div
+          className="md:hidden shrink-0 w-14 h-full bg-black opacity-25"
+          onClick={() => mittBus.emit('toggleSidebar')}
+        ></div>
       </div>
     </div>
   )

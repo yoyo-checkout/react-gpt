@@ -5,6 +5,7 @@ export type MittEventType = {
   updateChat: string
   createChat: Chat
   scroll2Bottom: undefined
+  toggleSidebar: undefined
 }
 
 export const mittBus = mitt<MittEventType>()

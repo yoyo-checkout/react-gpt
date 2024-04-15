@@ -1,11 +1,12 @@
 import { throttle } from 'lodash-es'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
-import { useScroll } from 'react-use'
+import { useScroll, useToggle } from 'react-use'
 import { Header } from '@/components/Header'
 import { Sidebar } from '@/components/Sidebar'
 import { Textarea } from '@/components/Textarea'
 import { chats as _chats, Chat as TChat } from '@/configs/chats'
+import { useBreakpoint } from '@/hooks/useBreakpoint'
 import { mittBus } from '@/plugins/mitt'
 
 export const Layout = () => {
@@ -18,7 +19,9 @@ export const Layout = () => {
   const scrollBottomRef = useRef<HTMLDivElement | null>(null)
   const [scrollBottomBtnVisible, setScrollBottomBtnVisible] = useState(false)
 
+  const breakpoint = useBreakpoint()
   const { y } = useScroll(containerRef)
+  const [sidebarVisible, toggleSidebar] = useToggle(breakpoint !== 'sm')
 
   const scrollToBottom = () => {
     const bottomCursor = scrollBottomRef.current
@@ -41,9 +44,10 @@ export const Layout = () => {
   }
 
   useEffect(() => {
-    mittBus.on('scroll2Bottom', scrollToBottom)
-    return () => mittBus.off('scroll2Bottom', scrollToBottom)
-  })
+    if (breakpoint === 'sm') {
+      if (sidebarVisible) toggleSidebar()
+    } else if (!sidebarVisible) toggleSidebar()
+  }, [breakpoint])
 
   useEffect(() => {
     const container = containerRef.current
@@ -55,21 +59,34 @@ export const Layout = () => {
   }, [y])
 
   useEffect(() => {
+    mittBus.on('scroll2Bottom', scrollToBottom)
+    return () => mittBus.off('scroll2Bottom', scrollToBottom)
+  })
+
+  useEffect(() => {
     mittBus.on('createChat', createChat)
     return () => mittBus.off('createChat', createChat)
   }, [chats])
+
+  useEffect(() => {
+    mittBus.on('toggleSidebar', toggleSidebar)
+    return () => mittBus.off('toggleSidebar', toggleSidebar)
+  }, [])
 
   const addTheme = (theme: string) => document.querySelector('html')?.classList.add(theme)
   addTheme('dark')
 
   return (
     <div className="relative z-0 flex h-full w-full overflow-hidden">
-      <Sidebar chats={chats} />
+      <Sidebar chats={chats} visible={sidebarVisible} />
       <div className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden">
         <Header />
 
         <main className="relative h-full w-full flex-1 overflow-auto transition-width">
-          <div className="hidden md:block fixed left-0 top-1/2 z-40 translate-x-[260px] -translate-y-1/2">
+          <div
+            className={`hidden md:block fixed left-0 top-1/2 z-40 -translate-y-1/2 transition duration-500 ${sidebarVisible ? 'translate-x-[260px]' : ''}`}
+            onClick={toggleSidebar}
+          >
             <button>
               <div className="flex h-[72px] w-8 items-center justify-center">
                 <div className="flex h-6 w-6 flex-col items-center">
