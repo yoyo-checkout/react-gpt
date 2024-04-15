@@ -1,13 +1,19 @@
 import { throttle } from 'lodash-es'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import { useScroll } from 'react-use'
 import { Header } from '@/components/Header'
 import { Sidebar } from '@/components/Sidebar'
 import { Textarea } from '@/components/Textarea'
+import { chats as _chats, Chat as TChat } from '@/configs/chats'
 import { mittBus } from '@/plugins/mitt'
 
 export const Layout = () => {
+  const params = useParams()
+  const navigate = useNavigate()
+
+  const [chats, setChats] = useState(_chats)
+
   const containerRef = useRef<HTMLDivElement | null>(null)
   const scrollBottomRef = useRef<HTMLDivElement | null>(null)
   const [scrollBottomBtnVisible, setScrollBottomBtnVisible] = useState(false)
@@ -28,6 +34,12 @@ export const Layout = () => {
     [],
   )
 
+  const createChat = (chat: TChat) => {
+    setChats([...chats, chat])
+    navigate(`/c/${chat.id}`)
+    scrollToBottom()
+  }
+
   useEffect(() => {
     mittBus.on('scroll2Bottom', scrollToBottom)
     return () => mittBus.off('scroll2Bottom', scrollToBottom)
@@ -42,12 +54,17 @@ export const Layout = () => {
     throttleUpdateVisible(distance > threshold)
   }, [y])
 
+  useEffect(() => {
+    mittBus.on('createChat', createChat)
+    return () => mittBus.off('createChat', createChat)
+  }, [chats])
+
   const addTheme = (theme: string) => document.querySelector('html')?.classList.add(theme)
   addTheme('dark')
 
   return (
     <div className="relative z-0 flex h-full w-full overflow-hidden">
-      <Sidebar />
+      <Sidebar chats={chats} />
       <div className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden">
         <Header />
 
@@ -68,7 +85,7 @@ export const Layout = () => {
             <div className="flex-1 overflow-hidden">
               <div className="h-full">
                 <div ref={containerRef} className="h-full w-full overflow-y-scroll">
-                  <div className="flex flex-col text-sm pb-9 relative">
+                  <div className="flex flex-col text-sm pb-9 relative h-full">
                     <div className="hidden sticky top-0 mb-1.5 md:flex items-center justify-between z-10 h-14 p-2 font-semibold bg-token-main-surface-primary">
                       <div className="absolute left-1/2 -translate-x-1/2"></div>
                       <div className="flex items-center gap-2">
@@ -94,30 +111,32 @@ export const Layout = () => {
                           </svg>
                         </button>
                       </div>
-                      <div className="flex gap-2 pr-1">
-                        <button className="text-white btn relative btn-neutral btn-small flex h-9 w-9 items-center justify-center whitespace-nowrap rounded-lg">
-                          <div className="flex w-full gap-2 items-center justify-center">
-                            <svg
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="icon-md"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                                d="M11.2929 2.29289C11.6834 1.90237 12.3166 1.90237 12.7071 2.29289L16.7071 6.29289C17.0976 6.68342 17.0976 7.31658 16.7071 7.70711C16.3166 8.09763 15.6834 8.09763 15.2929 7.70711L13 5.41421V14C13 14.5523 12.5523 15 12 15C11.4477 15 11 14.5523 11 14V5.41421L8.70711 7.70711C8.31658 8.09763 7.68342 8.09763 7.29289 7.70711C6.90237 7.31658 6.90237 6.68342 7.29289 6.29289L11.2929 2.29289ZM4 13C4.55228 13 5 13.4477 5 14V18C5 18.5523 5.44772 19 6 19H18C18.5523 19 19 18.5523 19 18V14C19 13.4477 19.4477 13 20 13C20.5523 13 21 13.4477 21 14V18C21 19.6569 19.6569 21 18 21H6C4.34315 21 3 19.6569 3 18V14C3 13.4477 3.44772 13 4 13Z"
-                                fill="currentColor"
-                              ></path>
-                            </svg>
-                          </div>
-                        </button>
-                      </div>
+                      {params.id ? (
+                        <div className="flex gap-2 pr-1">
+                          <button className="text-white btn relative btn-neutral btn-small flex h-9 w-9 items-center justify-center whitespace-nowrap rounded-lg">
+                            <div className="flex w-full gap-2 items-center justify-center">
+                              <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="icon-md"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  clipRule="evenodd"
+                                  d="M11.2929 2.29289C11.6834 1.90237 12.3166 1.90237 12.7071 2.29289L16.7071 6.29289C17.0976 6.68342 17.0976 7.31658 16.7071 7.70711C16.3166 8.09763 15.6834 8.09763 15.2929 7.70711L13 5.41421V14C13 14.5523 12.5523 15 12 15C11.4477 15 11 14.5523 11 14V5.41421L8.70711 7.70711C8.31658 8.09763 7.68342 8.09763 7.29289 7.70711C6.90237 7.31658 6.90237 6.68342 7.29289 6.29289L11.2929 2.29289ZM4 13C4.55228 13 5 13.4477 5 14V18C5 18.5523 5.44772 19 6 19H18C18.5523 19 19 18.5523 19 18V14C19 13.4477 19.4477 13 20 13C20.5523 13 21 13.4477 21 14V18C21 19.6569 19.6569 21 18 21H6C4.34315 21 3 19.6569 3 18V14C3 13.4477 3.44772 13 4 13Z"
+                                  fill="currentColor"
+                                ></path>
+                              </svg>
+                            </div>
+                          </button>
+                        </div>
+                      ) : null}
                     </div>
 
-                    <Outlet />
+                    <Outlet context={chats} />
                     <div ref={scrollBottomRef}></div>
                   </div>
                   {scrollBottomBtnVisible ? (

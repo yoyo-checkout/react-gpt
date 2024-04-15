@@ -1,13 +1,18 @@
 import dayjs from 'dayjs'
 import { groupBy } from 'lodash-es'
+import { FC } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Edit } from '@/components/image/Edit'
 import { Logo } from '@/components/image/Logo'
 import { More } from '@/components/image/More'
 import { Seal } from '@/components/image/Seal'
-import { chats } from '@/configs/chats'
+import { Chat as TChat } from '@/configs/chats'
 
-export function Sidebar() {
+interface Props {
+  chats: TChat[]
+}
+
+export const Sidebar: FC<Props> = ({ chats }) => {
   const chatsGroupByTime = groupBy(chats, (c) => dayjs(c.create_at).fromNow())
 
   return (
