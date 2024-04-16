@@ -3,6 +3,7 @@ import { ChangeEvent, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { prompts, Prompt as TPrompt } from '@/configs/prompts'
+import { defaultReply } from '@/configs/replies'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 import { mittBus } from '@/plugins/mitt'
 
@@ -101,7 +102,34 @@ export const Textarea = () => {
     setPrompt(() => e.target.value)
   }
   const handleSubmit = () => {
-    mittBus.emit('updateChat', prompt)
+    if (!prompt) return
+
+    if (params.id) {
+      mittBus.emit('updateChat', prompt)
+    } else {
+      mittBus.emit('createChat', {
+        id: uuidv4(),
+        name: prompt,
+        create_at: new Date().getTime(),
+        status: 'available',
+        conversations: [
+          {
+            owner: 'user',
+            messages: [
+              {
+                type: 'text',
+                content: prompt,
+              },
+            ],
+          },
+          {
+            owner: 'bot',
+            messages: [defaultReply],
+          },
+        ],
+      })
+    }
+
     mittBus.emit('scroll2Bottom')
     setPrompt(() => '')
   }
