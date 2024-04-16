@@ -1,5 +1,5 @@
 import { chunk } from 'lodash-es'
-import { ChangeEvent, useMemo, useState } from 'react'
+import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { prompts, Prompt as TPrompt } from '@/configs/prompts'
@@ -13,25 +13,24 @@ const Prompts = () => {
 
   function createChat(prompt: TPrompt) {
     mittBus.emit('createChat', {
-      id: uuidv4(),
-      name: prompt.title,
-      create_at: new Date().getTime(),
-      status: 'available',
-      conversations: [
-        {
-          owner: 'user',
-          messages: [
-            {
-              type: 'text',
-              content: prompt.content,
-            },
-          ],
-        },
-        {
-          owner: 'bot',
-          messages: prompt.replies,
-        },
-      ],
+      chat: {
+        id: uuidv4(),
+        name: prompt.title,
+        create_at: new Date().getTime(),
+        status: 'available',
+        conversations: [
+          {
+            owner: 'user',
+            messages: [
+              {
+                type: 'text',
+                content: prompt.content,
+              },
+            ],
+          },
+        ],
+      },
+      botReplies: prompt.replies,
     })
   }
 
@@ -97,42 +96,50 @@ const Prompts = () => {
 export const Textarea = () => {
   const params = useParams()
   const [prompt, setPrompt] = useState('')
+  const [isBotTyping, setIsBotTyping] = useState(false)
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(() => e.target.value)
   }
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!prompt) return
 
     if (params.id) {
-      mittBus.emit('updateChat', prompt)
+      mittBus.emit('createConversation', {
+        owner: 'user',
+        messages: [{ type: 'text', content: prompt }],
+      })
     } else {
       mittBus.emit('createChat', {
-        id: uuidv4(),
-        name: prompt,
-        create_at: new Date().getTime(),
-        status: 'available',
-        conversations: [
-          {
-            owner: 'user',
-            messages: [
-              {
-                type: 'text',
-                content: prompt,
-              },
-            ],
-          },
-          {
-            owner: 'bot',
-            messages: [defaultReply],
-          },
-        ],
+        chat: {
+          id: uuidv4(),
+          name: prompt,
+          create_at: new Date().getTime(),
+          status: 'available',
+          conversations: [
+            {
+              owner: 'user',
+              messages: [
+                {
+                  type: 'text',
+                  content: prompt,
+                },
+              ],
+            },
+          ],
+        },
+        botReplies: [defaultReply],
       })
     }
 
     mittBus.emit('scroll2Bottom')
     setPrompt(() => '')
   }
+
+  useEffect(() => {
+    mittBus.on('botTypingState', setIsBotTyping)
+    return () => mittBus.off('botTypingState', setIsBotTyping)
+  })
 
   return (
     <div className="w-full pt-2 md:pt-0 dark:border-white/20 md:border-transparent md:dark:border-transparent md:w-[calc(100%-.5rem)]">
@@ -144,12 +151,13 @@ export const Textarea = () => {
             <div className="overflow-hidden [&:has(textarea:focus)]:border-token-border-xheavy [&:has(textarea:focus)]:shadow-[0_2px_6px_rgba(0,0,0,.05)] flex flex-col w-full flex-grow relative border dark:text-white rounded-2xl bg-token-main-surface-primary border-token-border-medium">
               <textarea
                 value={prompt}
+                disabled={isBotTyping}
                 placeholder="傳訊息給 ChatGPT……"
                 className="outline-none m-0 w-full resize-none border-0 bg-transparent focus:ring-0 focus-visible:ring-0 dark:bg-transparent py-[10px] pr-10 md:py-3.5 md:pr-12 max-h-[25dvh] h-[52px] overflow-y-hidden placeholder-black/50 dark:placeholder-white/50 pl-3 md:pl-4"
                 onChange={handleChange}
               ></textarea>
               <button
-                disabled={!prompt}
+                disabled={!prompt || isBotTyping}
                 className="absolute bottom-1.5 right-2 rounded-lg border border-black bg-black p-0.5 text-white transition-colors disabled:text-gray-400 disabled:opacity-10 dark:border-white dark:bg-white dark:hover:bg-white md:bottom-3 md:right-3"
                 onClick={handleSubmit}
               >

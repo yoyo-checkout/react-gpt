@@ -1,9 +1,11 @@
 import mitt from 'mitt'
-import { Chat } from '@/configs/chats'
+import { Chat as TChat, Conversation as TConversation, Message as TMessage } from '@/configs/chats'
 
 export type MittEventType = {
-  updateChat: string
-  createChat: Chat
+  createChat: { chat: TChat; botReplies: TMessage[] }
+  updateChat: TChat
+  createConversation: TConversation
+  botTypingState: boolean
   scroll2Bottom: undefined
   toggleSidebar: undefined
 }

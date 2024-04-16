@@ -1,7 +1,7 @@
 import { Message as TMessage } from './chats'
 
-export const defaultReply: TMessage = {
-  type: 'paragraph',
+export const defaultReply = {
+  type: 'paragraph' as const,
   content: `That is the question!`,
 }
 
@@ -40,11 +40,10 @@ export default App;`,
   {
     type: 'list',
     content: [
-      `我們定義了一個名為<code>items</code>的數組，其中包含三個字符串元素。`,
-      `在<code>&lt;ul&gt;</code>元素中，我們使用<code>map</code>方法遍歷<code>items</code>數組。`,
-      `對於<code>items</code>數組中的每一個元素，<code>map</code>方法會執行一次函數。這個函數接收兩個參數：當前的元素和它的索引。`,
-      `我們返回一個<code>&lt;li&gt;</code>元素，其中包含當前的元素內容。我們也為每個<code>&lt;li&gt;</code>元素指定了一個唯一的<code>key</code>屬性，這是React要求的，用於識別列表中的每一個元素。`,
-      `最後，<code>map</code>方法返回一個新的數組，其中包含根據原始數組中的元素生成的所有<code>&lt;li&gt;</code>元素。`,
+      `您每天的日常生活是怎麼樣的？（例如：您的工作、家庭生活、娛樂活動等）`,
+      `您有哪些日常習慣？（例如：運動、閱讀、冥想等）`,
+      `您希望在哪些方面進行自我提升？（例如：學習新技能、改善健康狀況、提高工作效率等）`,
+      `您有沒有遇到什麼困難或障礙妨礙您達到目標？`,
     ],
   },
   {
@@ -103,12 +102,6 @@ export function Sidebar() {
   },
   {
     type: 'list',
-    content: [
-      `我們定義了一個名為<code>items</code>的數組，其中包含三個字符串元素。`,
-      `在<code>&lt;ul&gt;</code>元素中，我們使用<code>map</code>方法遍歷<code>items</code>數組。`,
-      `對於<code>items</code>數組中的每一個元素，<code>map</code>方法會執行一次函數。這個函數接收兩個參數：當前的元素和它的索引。`,
-      `我們返回一個<code>&lt;li&gt;</code>元素，其中包含當前的元素內容。我們也為每個<code>&lt;li&gt;</code>元素指定了一個唯一的<code>key</code>屬性，這是React要求的，用於識別列表中的每一個元素。`,
-      `最後，<code>map</code>方法返回一個新的數組，其中包含根據原始數組中的元素生成的所有<code>&lt;li&gt;</code>元素。`,
-    ],
+    content: [`石榴樂舞`, `氣泡石榴夢`, `可樂石榴調和`, `紅寶石氣泡`, `石榴響尾蛇`],
   },
 ]

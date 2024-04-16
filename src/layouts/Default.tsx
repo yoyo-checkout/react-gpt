@@ -5,9 +5,10 @@ import { useScroll, useToggle } from 'react-use'
 import { Header } from '@/components/Header'
 import { Sidebar } from '@/components/Sidebar'
 import { Textarea } from '@/components/Textarea'
-import { chats as _chats, Chat as TChat } from '@/configs/chats'
+import { chats as _chats, Chat as TChat, Message as TMessage } from '@/configs/chats'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 import { mittBus } from '@/plugins/mitt'
+import { sleep } from '@/utils/index'
 
 export const Layout = () => {
   const params = useParams()
@@ -37,10 +38,22 @@ export const Layout = () => {
     [],
   )
 
-  const createChat = (chat: TChat) => {
+  const createChat = async ({ chat, botReplies }: { chat: TChat; botReplies: TMessage[] }) => {
     setChats([...chats, chat])
     navigate(`/c/${chat.id}`)
     scrollToBottom()
+
+    await sleep(500)
+    mittBus.emit('createConversation', {
+      owner: 'bot',
+      messages: botReplies,
+    })
+  }
+  const updateChat = (chat: TChat) => {
+    setChats(() => {
+      const newList = chats.map((item) => (item.id === chat.id ? chat : item))
+      return newList
+    })
   }
 
   useEffect(() => {
@@ -66,6 +79,11 @@ export const Layout = () => {
   useEffect(() => {
     mittBus.on('createChat', createChat)
     return () => mittBus.off('createChat', createChat)
+  }, [chats])
+
+  useEffect(() => {
+    mittBus.on('updateChat', updateChat)
+    return () => mittBus.off('updateChat', updateChat)
   }, [chats])
 
   useEffect(() => {
