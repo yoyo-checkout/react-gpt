@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { groupBy } from 'lodash-es'
+import { groupBy, orderBy } from 'lodash-es'
 import { FC, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Edit } from '@/components/image/Edit'
@@ -16,7 +16,10 @@ interface Props {
 }
 
 export const Sidebar: FC<Props> = ({ chats, visible }) => {
-  const chatsGroupByTime = useMemo(() => groupBy(chats, (c) => dayjs(c.create_at).fromNow()), [chats])
+  const chatsGroupByTime = useMemo(() => {
+    const sortedChats = orderBy(chats, (e) => e.create_at, 'desc')
+    return groupBy(sortedChats, (c) => dayjs(c.create_at).fromNow())
+  }, [chats])
   const breakpoint = useBreakpoint()
 
   return (
@@ -55,6 +58,7 @@ export const Sidebar: FC<Props> = ({ chats, visible }) => {
                   <NavLink
                     to="/"
                     className="group flex h-10 items-center gap-2 rounded-lg bg-token-sidebar-surface-primary px-2 font-medium hover:bg-token-sidebar-surface-secondary cursor-pointer"
+                    onClick={() => breakpoint === 'sm' && mittBus.emit('toggleSidebar')}
                   >
                     <div className="h-7 w-7 flex-shrink-0">
                       <div className="relative flex h-full items-center justify-center rounded-full bg-white text-gray-950">
