@@ -14,7 +14,7 @@ export const Chat = () => {
   const _chat = chats.find((c) => c.id === params.id)
   const chat = useLatest(_chat)
 
-  useTitle(_chat?.name || '')
+  useTitle(chat.current?.name || 'React GPT')
 
   const createConversation = async (conversation: TConversation) => {
     const isUserConversation = conversation.owner === 'user'
@@ -34,6 +34,7 @@ export const Chat = () => {
     const botReplies = isUserConversation ? [getRandomItem(replies)] : conversation.messages
     mittBus.emit('botTypingState', true)
     for (let i = 0; i < botReplies.length; i++) {
+      if (params.id !== chat.current?.id) return stopBotReplyMessage()
       await botReplyMessage(botReplies[i])
     }
     mittBus.emit('botTypingState', false)
@@ -41,6 +42,8 @@ export const Chat = () => {
 
   const botReplyMessage = async (message: TMessage) => {
     await replyLikeEventStream(message, (m, newLine) => {
+      if (params.id !== chat.current?.id) return stopBotReplyMessage()
+
       const newConversations = chat.current!.conversations.slice()
       const lastConversation = newConversations.slice(-1)[0]
       const newMessage = {
@@ -61,12 +64,15 @@ export const Chat = () => {
       })
     })
   }
+  const stopBotReplyMessage = () => {
+    mittBus.emit('botTypingState', false)
+  }
 
   useEffect(() => {
     mittBus.on('createConversation', createConversation)
     return () => mittBus.off('createConversation', createConversation)
-  }, [_chat])
+  }, [chat.current])
 
-  if (!_chat) return <Navigate to="/" replace />
-  return _chat.conversations.map((c, conversionIndex) => <Conversation key={conversionIndex} conversation={c} />)
+  if (!chat.current) return <Navigate to="/" replace />
+  return chat.current.conversations.map((c, conversionIndex) => <Conversation key={conversionIndex} conversation={c} />)
 }
