@@ -1,13 +1,6 @@
-import { Message } from './chats'
+import { TPrompt } from '@/types'
 
-export type Prompt = {
-  title: string
-  desc: string
-  content: string
-  replies: Message[]
-}
-
-export const prompts: Prompt[] = [
+export const prompts: TPrompt[] = [
   {
     title: '解釋飛機亂流',
     desc: '給沒搭過飛機的人',

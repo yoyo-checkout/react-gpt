@@ -1,32 +1,6 @@
-export type Message =
-  | {
-      type: 'text' | 'paragraph'
-      content: string
-    }
-  | {
-      type: 'code'
-      content: string
-      language: string
-    }
-  | {
-      type: 'list'
-      content: string[]
-    }
+import { TChat } from '@/types'
 
-export type Conversation = {
-  owner: 'user' | 'bot'
-  messages: Message[]
-}
-
-export type Chat = {
-  id: string
-  name: string
-  create_at: number
-  status: 'available' | 'delete' | 'archive'
-  conversations: Conversation[]
-}
-
-export const chats: Chat[] = [
+export const chats: TChat[] = [
   {
     id: '250a6eda-2368-4085-b6c0-88242558614c',
     name: 'React Map Elements',

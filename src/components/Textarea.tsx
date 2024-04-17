@@ -2,10 +2,11 @@ import { chunk } from 'lodash-es'
 import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
-import { prompts, Prompt as TPrompt } from '@/configs/prompts'
+import { prompts } from '@/configs/prompts'
 import { defaultReply } from '@/configs/replies'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 import { mittBus } from '@/plugins/mitt'
+import { TPrompt } from '@/types'
 
 const Prompts = () => {
   const breakpoint = useBreakpoint()

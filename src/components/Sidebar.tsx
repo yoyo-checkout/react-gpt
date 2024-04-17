@@ -6,9 +6,9 @@ import { Edit } from '@/components/image/Edit'
 import { Logo } from '@/components/image/Logo'
 import { More } from '@/components/image/More'
 import { Seal } from '@/components/image/Seal'
-import { Chat as TChat } from '@/configs/chats'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 import { mittBus } from '@/plugins/mitt'
+import { TChat } from '@/types'
 
 interface Props {
   chats: TChat[]

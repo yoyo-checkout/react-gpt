@@ -1,5 +1,5 @@
 import { random } from 'lodash-es'
-import { Message as TMessage } from '@/configs/chats'
+import { TMessage } from '@/types'
 import { sleep } from './index'
 
 export function replyLikeEventStream<T extends TMessage>(message: T, cb: (m: T['content'], newLine: boolean) => void) {

@@ -1,4 +1,4 @@
-import { Message as TMessage } from './chats'
+import { TMessage } from '@/types'
 
 export const defaultReply = {
   type: 'paragraph' as const,

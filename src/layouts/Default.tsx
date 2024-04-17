@@ -5,9 +5,10 @@ import { useScroll, useToggle } from 'react-use'
 import { Header } from '@/components/Header'
 import { Sidebar } from '@/components/Sidebar'
 import { Textarea } from '@/components/Textarea'
-import { chats as _chats, Chat as TChat, Message as TMessage } from '@/configs/chats'
+import { chats as _chats } from '@/configs/chats'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 import { mittBus } from '@/plugins/mitt'
+import { TChat, TMessage } from '@/types'
 import { sleep } from '@/utils/index'
 
 export const Layout = () => {
