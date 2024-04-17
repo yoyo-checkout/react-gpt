@@ -13,9 +13,8 @@ export const Chat = () => {
   const params = useParams()
   const _chat = chats.find((c) => c.id === params.id)
   const chat = useLatest(_chat)
-  if (!_chat) return <Navigate to="/" replace />
 
-  useTitle(_chat.name)
+  useTitle(_chat?.name || '')
 
   const createConversation = async (conversation: TConversation) => {
     const isUserConversation = conversation.owner === 'user'
@@ -68,5 +67,6 @@ export const Chat = () => {
     return () => mittBus.off('createConversation', createConversation)
   }, [_chat])
 
+  if (!_chat) return <Navigate to="/" replace />
   return _chat.conversations.map((c, conversionIndex) => <Conversation key={conversionIndex} conversation={c} />)
 }

@@ -1,5 +1,5 @@
 import { throttle } from 'lodash-es'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import { useScroll, useToggle } from 'react-use'
 import { Header } from '@/components/Header'
@@ -34,27 +34,21 @@ export const Layout = () => {
     }, 0)
   }
 
-  const throttleUpdateVisible = useCallback(
-    throttle((v: boolean) => setScrollBottomBtnVisible(v), 300),
-    [],
-  )
+  const throttlSetScrollBottomBtnVisible = throttle((v: boolean) => setScrollBottomBtnVisible(v), 300)
 
   const createChat = async ({ chat, botReplies }: { chat: TChat; botReplies: TMessage[] }) => {
     setChats([...chats, chat])
     navigate(`/c/${chat.id}`)
     scrollToBottom()
 
-    await sleep(500)
+    await sleep(50)
     mittBus.emit('createConversation', {
       owner: 'bot',
       messages: botReplies,
     })
   }
   const updateChat = (chat: TChat) => {
-    setChats(() => {
-      const newList = chats.map((item) => (item.id === chat.id ? chat : item))
-      return newList
-    })
+    setChats(() => chats.map((item) => (item.id === chat.id ? chat : item)))
   }
 
   useEffect(() => {
@@ -69,13 +63,13 @@ export const Layout = () => {
 
     const threshold = 50
     const distance = container.scrollHeight - container.clientHeight - container.scrollTop
-    throttleUpdateVisible(distance > threshold)
-  }, [y])
+    throttlSetScrollBottomBtnVisible(distance > threshold)
+  }, [y, params])
 
   useEffect(() => {
     mittBus.on('scroll2Bottom', scrollToBottom)
     return () => mittBus.off('scroll2Bottom', scrollToBottom)
-  })
+  }, [])
 
   useEffect(() => {
     mittBus.on('createChat', createChat)

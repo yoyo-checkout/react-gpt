@@ -140,7 +140,7 @@ export const Textarea = () => {
   useEffect(() => {
     mittBus.on('botTypingState', setIsBotTyping)
     return () => mittBus.off('botTypingState', setIsBotTyping)
-  })
+  }, [])
 
   return (
     <div className="w-full pt-2 md:pt-0 dark:border-white/20 md:border-transparent md:dark:border-transparent md:w-[calc(100%-.5rem)]">
