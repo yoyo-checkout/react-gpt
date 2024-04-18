@@ -163,7 +163,7 @@ export const Textarea = () => {
                 onClick={handleSubmit}
               >
                 <span>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="dark:text-black">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-white dark:text-black">
                     <path
                       d="M7 11L12 6L17 11M12 18V7"
                       stroke="currentColor"

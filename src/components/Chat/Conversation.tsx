@@ -25,7 +25,7 @@ const Avatar: FC<AvatarProps> = ({ conversation }) => {
   }
 
   return (
-    <div className="relative p-1 rounded-sm flex items-center justify-center bg-[#19c37d] w-6 h-6">
+    <div className="relative p-1 rounded-sm flex items-center justify-center bg-token-main-surface-primary text-token-text-primary h-6 w-6">
       <Logo className="icon-sm" />
     </div>
   )
