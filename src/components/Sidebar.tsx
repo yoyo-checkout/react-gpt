@@ -30,7 +30,7 @@ export const Sidebar: FC<Props> = ({ chats, visible }) => {
         <div className="scrollbar-trigger relative h-full w-full flex-1 items-start bg-token-sidebar-surface-primary border-white/20">
           <div className="md:hidden absolute right-0 top-0 z-10 -mr-12 pt-3.5">
             <button
-              className="ml-1 flex h-10 w-10 items-center justify-center text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="ml-1 flex h-10 w-10 items-center justify-center focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               onClick={() => mittBus.emit('toggleSidebar')}
             >
               <svg
@@ -119,7 +119,7 @@ export const Sidebar: FC<Props> = ({ chats, visible }) => {
             </div>
 
             <div className="flex flex-col pt-2 empty:hidden dark:border-white/20">
-              <a className="group flex gap-2 p-2.5 text-white text-sm cursor-pointer focus:ring-0 radix-disabled:pointer-events-none radix-disabled:opacity-50 group items-center hover:bg-token-sidebar-surface-secondary m-0 rounded-lg px-2">
+              <a className="group flex gap-2 p-2.5 text-sm cursor-pointer focus:ring-0 radix-disabled:pointer-events-none radix-disabled:opacity-50 group items-center hover:bg-token-sidebar-surface-secondary m-0 rounded-lg px-2">
                 <span className="flex w-full flex-row flex-wrap-reverse justify-between">
                   <div className="flex items-center gap-2">
                     <span className="flex h-7 w-7 items-center justify-center rounded-full border border-token-border-light">

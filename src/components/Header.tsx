@@ -5,7 +5,7 @@ export const Header = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="text-white sticky top-0 z-10 flex min-h-[40px] items-center justify-center border-b border-token-border-medium bg-token-main-surface-primary pl-1 md:hidden">
+    <div className="sticky top-0 z-10 flex min-h-[40px] items-center justify-center border-b border-token-border-medium bg-token-main-surface-primary pl-1 md:hidden">
       <button
         className="absolute bottom-0 left-0 top-0 inline-flex items-center justify-center rounded-md px-3 hover:text-token-text-primary focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white active:opacity-50"
         onClick={() => mittBus.emit('toggleSidebar')}

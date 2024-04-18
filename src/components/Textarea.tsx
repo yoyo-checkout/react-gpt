@@ -159,11 +159,11 @@ export const Textarea = () => {
               ></textarea>
               <button
                 disabled={!prompt || isBotTyping}
-                className="absolute bottom-1.5 right-2 rounded-lg border border-black bg-black p-0.5 text-white transition-colors disabled:text-gray-400 disabled:opacity-10 dark:border-white dark:bg-white dark:hover:bg-white md:bottom-3 md:right-3"
+                className="absolute bottom-1.5 right-2 rounded-lg border border-black bg-black p-0.5 transition-colors disabled:text-gray-400 disabled:opacity-10 dark:border-white dark:bg-white dark:hover:bg-white md:bottom-3 md:right-3"
                 onClick={handleSubmit}
               >
                 <span>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-white dark:text-black">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="dark:text-black">
                     <path
                       d="M7 11L12 6L17 11M12 18V7"
                       stroke="currentColor"
