@@ -1,3 +1,5 @@
+export type Maybe<T> = T | undefined
+
 export type TMessage =
   | {
       type: 'text' | 'paragraph'
