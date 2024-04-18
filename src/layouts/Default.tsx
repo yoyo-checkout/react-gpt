@@ -2,6 +2,7 @@ import { throttle } from 'lodash-es'
 import { useEffect, useRef, useState } from 'react'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import { useScroll, useToggle } from 'react-use'
+import { SettingDialog } from '@/components/Dialog/Setting'
 import { Header } from '@/components/Header'
 import { Sidebar } from '@/components/Sidebar'
 import { Textarea } from '@/components/Textarea'
@@ -198,6 +199,8 @@ export const Layout = () => {
           </div>
         </main>
       </div>
+
+      <SettingDialog />
     </div>
   )
 }

@@ -8,6 +8,7 @@ export type MittEventType = {
   botTypingState: boolean
   scroll2Bottom: undefined
   toggleSidebar: undefined
+  openSettingDialog: undefined
 }
 
 export const mittBus = mitt<MittEventType>()
