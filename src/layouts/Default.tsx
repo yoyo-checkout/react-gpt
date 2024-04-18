@@ -7,6 +7,7 @@ import { Sidebar } from '@/components/Sidebar'
 import { Textarea } from '@/components/Textarea'
 import { chats as _chats } from '@/configs/chats'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
+import { useInit } from '@/hooks/useInit'
 import { mittBus } from '@/plugins/mitt'
 import { TChat, TMessage } from '@/types'
 import { sleep } from '@/utils/index'
@@ -21,6 +22,7 @@ export const Layout = () => {
   const scrollBottomRef = useRef<HTMLDivElement | null>(null)
   const [scrollBottomBtnVisible, setScrollBottomBtnVisible] = useState(false)
 
+  useInit()
   const breakpoint = useBreakpoint()
   const { y } = useScroll(containerRef)
   const [sidebarVisible, toggleSidebar] = useToggle(breakpoint !== 'sm')
@@ -86,9 +88,6 @@ export const Layout = () => {
     return () => mittBus.off('toggleSidebar', toggleSidebar)
   }, [])
 
-  const addTheme = (theme: string) => document.querySelector('html')?.classList.add(theme)
-  addTheme('dark')
-
   return (
     <div className="relative z-0 flex h-full w-full overflow-hidden">
       <Sidebar chats={chats} visible={sidebarVisible} />
@@ -121,7 +120,7 @@ export const Layout = () => {
                       <div className="flex items-center gap-2">
                         <button className="group flex cursor-pointer items-center gap-1 rounded-xl py-2 px-3 text-lg font-medium hover:bg-token-main-surface-secondary radix-state-open:bg-token-main-surface-secondary">
                           <div className="flex gap-x-1">
-                            <span className="text-white">ChatGPT</span>
+                            <span>ChatGPT</span>
                             <span className="text-token-text-secondary">3.5</span>
                           </div>
                           <svg
@@ -143,7 +142,7 @@ export const Layout = () => {
                       </div>
                       {params.id ? (
                         <div className="flex gap-2 pr-1">
-                          <button className="text-white btn relative btn-neutral btn-small flex h-9 w-9 items-center justify-center whitespace-nowrap rounded-lg">
+                          <button className="btn relative btn-neutral btn-small flex h-9 w-9 items-center justify-center whitespace-nowrap rounded-lg">
                             <div className="flex w-full gap-2 items-center justify-center">
                               <svg
                                 width="24"

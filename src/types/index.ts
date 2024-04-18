@@ -1,5 +1,7 @@
 export type Maybe<T> = T | undefined
 
+export type Theme = 'system' | 'dark' | 'light'
+
 export type TMessage =
   | {
       type: 'text' | 'paragraph'
