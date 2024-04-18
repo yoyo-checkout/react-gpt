@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { Popover, Transition } from '@headlessui/react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { useClickAway } from 'react-use'
+import { useTheme } from '@/hooks/useTheme'
 import { mittBus } from '@/plugins/mitt'
 
 export const SettingDialog = () => {
@@ -18,6 +20,7 @@ export const SettingDialog = () => {
     return () => mittBus.off('openSettingDialog', openDialog)
   })
 
+  const { theme, themes, setTheme, getThemeLabel } = useTheme()
   const [tab, setTab] = useState<'general' | 'dataControl'>('general')
 
   return (
@@ -116,25 +119,61 @@ export const SettingDialog = () => {
                     <div className="border-b border-token-border-light pb-3 last-of-type:border-b-0">
                       <div className="flex items-center justify-between">
                         <div>主題</div>
-                        <button className="text-token-text-primary border border-transparent inline-flex h-9 items-center justify-center gap-1 rounded-lg bg-white px-3 text-sm dark:transparent dark:bg-transparent leading-none outline-none cursor-pointer hover:bg-token-main-surface-secondary dark:hover:bg-token-main-surface-secondary focus-visible:border-green-500 dark:focus-visible:border-green-500 radix-state-active:text-token-text-secondary radix-disabled:cursor-auto radix-disabled:bg-transparent radix-disabled:text-token-text-tertiary dark:radix-disabled:bg-transparent">
-                          <span className="pointer-events-none a">深色介面</span>
-                          <span>
-                            <svg
-                              stroke="currentColor"
-                              fill="none"
-                              strokeWidth="2"
-                              viewBox="0 0 24 24"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="icon-sm"
-                              height="1em"
-                              width="1em"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                          </span>
-                        </button>
+                        <Popover className="relative">
+                          {({ close }) => (
+                            <>
+                              <Popover.Button className="text-token-text-primary border border-transparent inline-flex h-9 items-center justify-center gap-1 rounded-lg bg-white px-3 text-sm dark:transparent dark:bg-transparent leading-none outline-none cursor-pointer hover:bg-token-main-surface-secondary dark:hover:bg-token-main-surface-secondary focus-visible:border-green-500 dark:focus-visible:border-green-500 radix-state-active:text-token-text-secondary radix-disabled:cursor-auto radix-disabled:bg-transparent radix-disabled:text-token-text-tertiary dark:radix-disabled:bg-transparent">
+                                <span className="pointer-events-none">{getThemeLabel(theme)}</span>
+                                <span>
+                                  <svg
+                                    stroke="currentColor"
+                                    fill="none"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="icon-sm"
+                                    height="1em"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                  </svg>
+                                </span>
+                              </Popover.Button>
+                              <Transition
+                                as={Fragment}
+                                enter="transition ease-out duration-200"
+                                enterFrom="opacity-0 translate-y-1"
+                                enterTo="opacity-100 translate-y-0"
+                                leave="transition ease-in duration-150"
+                                leaveFrom="opacity-100 translate-y-0"
+                                leaveTo="opacity-0 translate-y-1"
+                              >
+                                <Popover.Panel className="absolute top-[110%] right-0 z-[1] shadow-xl">
+                                  <div data-radix-popper-content-wrapper="" dir="ltr">
+                                    <div className="min-w-[220px] rounded-lg popover bg-token-main-surface-primary p-[5px] shadow-xs will-change-[opacity,transform] radix-side-bottom:animate-slideUpAndFade radix-side-left:animate-slideRightAndFade radix-side-right:animate-slideLeftAndFade radix-side-top:animate-slideDownAndFade border border-token-main-surface-secondary">
+                                      <div>
+                                        {themes.map((e) => (
+                                          <div
+                                            key={e}
+                                            className="relative flex h-8 cursor-pointer select-none items-center rounded-md pl-3 pr-7 text-sm leading-none text-token-text-primary hover:bg-token-main-surface-secondary radix-disabled:pointer-events-none radix-highlighted:bg-token-main-surface-secondary radix-disabled:text-token-text-tertiary radix-highlighted:outline-none"
+                                            onClick={() => {
+                                              setTheme(e)
+                                              close()
+                                            }}
+                                          >
+                                            <span>{getThemeLabel(e)}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </Popover.Panel>
+                              </Transition>
+                            </>
+                          )}
+                        </Popover>
                       </div>
                     </div>
                     <div className="border-b border-token-border-light pb-3 last-of-type:border-b-0">
