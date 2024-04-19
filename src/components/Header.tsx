@@ -20,7 +20,10 @@ export const Header = () => {
         </svg>
       </button>
 
-      <div className="group flex cursor-pointer items-center gap-1 rounded-xl py-2 px-3 text-lg font-medium hover:bg-token-main-surface-secondary radix-state-open:bg-token-main-surface-secondary">
+      <div
+        className="group flex cursor-pointer items-center gap-1 rounded-xl py-2 px-3 text-lg font-medium hover:bg-token-main-surface-secondary radix-state-open:bg-token-main-surface-secondary"
+        onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+      >
         <div>
           ChatGPT <span className="text-token-text-secondary">3.5</span>
         </div>

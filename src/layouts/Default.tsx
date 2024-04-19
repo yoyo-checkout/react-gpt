@@ -120,7 +120,10 @@ export const Layout = () => {
                     <div className="hidden sticky top-0 mb-1.5 md:flex items-center justify-between z-10 h-14 p-2 font-semibold bg-token-main-surface-primary">
                       <div className="absolute left-1/2 -translate-x-1/2"></div>
                       <div className="flex items-center gap-2">
-                        <button className="group flex cursor-pointer items-center gap-1 rounded-xl py-2 px-3 text-lg font-medium hover:bg-token-main-surface-secondary radix-state-open:bg-token-main-surface-secondary">
+                        <button
+                          className="group flex cursor-pointer items-center gap-1 rounded-xl py-2 px-3 text-lg font-medium hover:bg-token-main-surface-secondary radix-state-open:bg-token-main-surface-secondary"
+                          onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                        >
                           <div className="flex gap-x-1">
                             <span>ChatGPT</span>
                             <span className="text-token-text-secondary">3.5</span>
@@ -144,7 +147,10 @@ export const Layout = () => {
                       </div>
                       {params.id ? (
                         <div className="flex gap-2 pr-1">
-                          <button className="btn relative btn-neutral btn-small flex h-9 w-9 items-center justify-center whitespace-nowrap rounded-lg">
+                          <button
+                            className="btn relative btn-neutral btn-small flex h-9 w-9 items-center justify-center whitespace-nowrap rounded-lg"
+                            onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                          >
                             <div className="flex w-full gap-2 items-center justify-center">
                               <svg
                                 width="24"

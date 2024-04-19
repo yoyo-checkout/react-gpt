@@ -163,7 +163,10 @@ export const SettingDialog = () => {
                       登入時需進行額外的安全性檢測程序。如果你無法通過該檢測程序，你可以選擇透過電子郵件復原帳戶。
                     </div>
                   </div>
-                  <button className="btn relative btn-neutral whitespace-nowrap">
+                  <button
+                    className="btn relative btn-neutral whitespace-nowrap"
+                    onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                  >
                     <div className="flex w-full gap-2 items-center justify-center">啟用</div>
                   </button>
                 </div>
@@ -175,6 +178,7 @@ export const SettingDialog = () => {
                     value="on"
                     aria-label="使用資料分析時，始終顯示程式碼"
                     className="cursor-pointer bg-gray-200 radix-state-checked:bg-green-600 relative shrink-0 rounded-full h-[20px] w-[32px]"
+                    onClick={() => mittBus.emit('openFeatureDisabledDialog')}
                   >
                     <span
                       data-state="unchecked"
@@ -188,8 +192,10 @@ export const SettingDialog = () => {
                   <div>
                     <div>已封存的交談</div>
                   </div>
-                  {/* TODO */}
-                  <button className="btn relative btn-neutral">
+                  <button
+                    className="btn relative btn-neutral"
+                    onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                  >
                     <div className="flex w-full gap-2 items-center justify-center">管理</div>
                   </button>
                 </div>
@@ -199,8 +205,10 @@ export const SettingDialog = () => {
                   <div>
                     <div>封存全部交談</div>
                   </div>
-                  {/* TODO */}
-                  <button className="btn relative btn-neutral">
+                  <button
+                    className="btn relative btn-neutral"
+                    onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                  >
                     <div className="flex w-full gap-2 items-center justify-center">封存全部</div>
                   </button>
                 </div>
@@ -210,8 +218,7 @@ export const SettingDialog = () => {
                   <div>
                     <div>刪除全部交談內容</div>
                   </div>
-                  {/* TODO */}
-                  <button className="btn relative btn-danger">
+                  <button className="btn relative btn-danger" onClick={() => mittBus.emit('openFeatureDisabledDialog')}>
                     <div className="flex w-full gap-2 items-center justify-center">刪除全部</div>
                   </button>
                 </div>
@@ -232,6 +239,7 @@ export const SettingDialog = () => {
                     value="on"
                     aria-label="交談歷程及訓練"
                     className="cursor-pointer bg-gray-200 radix-state-checked:bg-green-600 relative shrink-0 rounded-full h-[20px] w-[32px]"
+                    onClick={() => mittBus.emit('openFeatureDisabledDialog')}
                   >
                     <span
                       data-state="checked"
@@ -257,7 +265,10 @@ export const SettingDialog = () => {
                   <div>
                     <div>共享的連結</div>
                   </div>
-                  <button className="btn relative btn-neutral">
+                  <button
+                    className="btn relative btn-neutral"
+                    onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                  >
                     <div className="flex w-full gap-2 items-center justify-center">管理</div>
                   </button>
                 </div>
@@ -267,7 +278,10 @@ export const SettingDialog = () => {
                   <div>
                     <div>匯出資料</div>
                   </div>
-                  <button className="btn relative btn-neutral">
+                  <button
+                    className="btn relative btn-neutral"
+                    onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                  >
                     <div className="flex w-full gap-2 items-center justify-center">匯出</div>
                   </button>
                 </div>
@@ -277,7 +291,7 @@ export const SettingDialog = () => {
                   <div>
                     <div>刪除帳戶</div>
                   </div>
-                  <button className="btn relative btn-danger">
+                  <button className="btn relative btn-danger" onClick={() => mittBus.emit('openFeatureDisabledDialog')}>
                     <div className="flex w-full gap-2 items-center justify-center">刪除</div>
                   </button>
                 </div>

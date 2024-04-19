@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { Logo } from '@/components/image/Logo'
+import { mittBus } from '@/plugins/mitt'
 import { TConversation, TMessage } from '@/types'
 import { Highlight } from './Highlight'
 
@@ -91,7 +92,10 @@ export const Conversation: FC<ConversationProps> = ({ conversation: c }) => {
                   {c.owner === 'user' ? (
                     <div className="mt-1 flex gap-3 empty:hidden juice:justify-end">
                       <div className="text-gray-400 flex self-end lg:self-center items-center justify-center lg:justify-start mt-0 -ml-1 h-7 gap-[2px] visible">
-                        <button className="p-1 rounded-md text-token-text-tertiary hover:text-token-text-primary md:invisible md:group-hover:visible md:group-[.final-completion]:visible">
+                        <button
+                          className="p-1 rounded-md text-token-text-tertiary hover:text-token-text-primary md:invisible md:group-hover:visible md:group-[.final-completion]:visible"
+                          onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                        >
                           <div className="flex items-center gap-1.5 text-xs">
                             <svg
                               width="24"
@@ -119,7 +123,10 @@ export const Conversation: FC<ConversationProps> = ({ conversation: c }) => {
                 <div className="mt-1 flex gap-3 empty:hidden">
                   <div className="text-gray-400 flex self-end lg:self-center items-center justify-center lg:justify-start mt-0 -ml-1 h-7 gap-[2px] visible">
                     <span>
-                      <button className="flex items-center gap-1.5 rounded-md p-1 text-xs text-token-text-tertiary hover:text-token-text-primary md:invisible md:group-hover:visible md:group-[.final-completion]:visible">
+                      <button
+                        className="flex items-center gap-1.5 rounded-md p-1 text-xs text-token-text-tertiary hover:text-token-text-primary md:invisible md:group-hover:visible md:group-[.final-completion]:visible"
+                        onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                      >
                         <svg
                           width="24"
                           height="24"
@@ -138,7 +145,10 @@ export const Conversation: FC<ConversationProps> = ({ conversation: c }) => {
                       </button>
                     </span>
                     <span>
-                      <button className="p-1 rounded-md text-token-text-tertiary hover:text-token-text-primary md:invisible md:group-hover:visible md:group-[.final-completion]:visible">
+                      <button
+                        className="p-1 rounded-md text-token-text-tertiary hover:text-token-text-primary md:invisible md:group-hover:visible md:group-[.final-completion]:visible"
+                        onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                      >
                         <div className="flex items-center gap-1.5 text-xs">
                           <svg
                             width="24"
@@ -160,7 +170,10 @@ export const Conversation: FC<ConversationProps> = ({ conversation: c }) => {
                     </span>
                     <div className="flex">
                       <span>
-                        <button className="p-1 rounded-md text-token-text-tertiary hover:text-token-text-primary md:invisible md:group-hover:visible md:group-[.final-completion]:visible">
+                        <button
+                          className="p-1 rounded-md text-token-text-tertiary hover:text-token-text-primary md:invisible md:group-hover:visible md:group-[.final-completion]:visible"
+                          onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                        >
                           <svg
                             width="24"
                             height="24"

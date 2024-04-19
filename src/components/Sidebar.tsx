@@ -42,7 +42,7 @@ export const Sidebar: FC<Props> = ({ chats, visible }) => {
         break
       case 'customize':
       case 'logout':
-        // TODO
+        mittBus.emit('openFeatureDisabledDialog')
         break
     }
     setPopupVisible(false)
@@ -127,11 +127,14 @@ export const Sidebar: FC<Props> = ({ chats, visible }) => {
                             <div className="absolute bottom-0 right-0 top-0 items-center gap-1.5 pr-2 hidden group-hover:flex">
                               <button
                                 className="flex items-center justify-center text-token-text-primary transition hover:text-token-text-secondary radix-state-open:text-token-text-secondary"
-                                type="button"
+                                onClick={() => mittBus.emit('openFeatureDisabledDialog')}
                               >
                                 <More className="icon-md" />
                               </button>
-                              <button className="flex items-center justify-center text-token-text-primary transition hover:text-token-text-secondary radix-state-open:text-token-text-secondary">
+                              <button
+                                className="flex items-center justify-center text-token-text-primary transition hover:text-token-text-secondary radix-state-open:text-token-text-secondary"
+                                onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                              >
                                 <Seal className="icon-md" />
                               </button>
                             </div>
@@ -145,7 +148,10 @@ export const Sidebar: FC<Props> = ({ chats, visible }) => {
             </div>
 
             <div className="flex flex-col pt-2 empty:hidden dark:border-white/20">
-              <a className="group flex gap-2 p-2.5 text-sm cursor-pointer focus:ring-0 radix-disabled:pointer-events-none radix-disabled:opacity-50 group items-center hover:bg-token-sidebar-surface-secondary m-0 rounded-lg px-2">
+              <a
+                className="group flex gap-2 p-2.5 text-sm cursor-pointer focus:ring-0 radix-disabled:pointer-events-none radix-disabled:opacity-50 group items-center hover:bg-token-sidebar-surface-secondary m-0 rounded-lg px-2"
+                onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+              >
                 <span className="flex w-full flex-row flex-wrap-reverse justify-between">
                   <div className="flex items-center gap-2">
                     <span className="flex h-7 w-7 items-center justify-center rounded-full border border-token-border-light">
