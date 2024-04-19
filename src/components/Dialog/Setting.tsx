@@ -1,19 +1,12 @@
 import { Popover, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useState } from 'react'
+import { useDialog } from '@/hooks/useDialog'
 import { useTheme } from '@/hooks/useTheme'
 import { mittBus } from '@/plugins/mitt'
 import { DialogLayout } from './Layout'
 
 export const SettingDialog = () => {
-  const [visible, setVisible] = useState(false)
-
-  const openDialog = () => setVisible(true)
-  const closeDialog = () => setVisible(false)
-
-  useEffect(() => {
-    mittBus.on('openSettingDialog', openDialog)
-    return () => mittBus.off('openSettingDialog', openDialog)
-  })
+  const { visible, closeDialog } = useDialog('openSettingDialog')
 
   const { theme, themes, setTheme, getThemeLabel } = useTheme()
   const [tab, setTab] = useState<'general' | 'dataControl'>('general')
