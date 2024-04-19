@@ -11,7 +11,7 @@ export const DialogLayout: FC<Props> = ({ visible, children, onClose }) => {
   return (
     <Transition appear show={visible} as={Fragment}>
       <Dialog as="div" className="absolute inset-0 z-10" onClose={() => {}}>
-        <div className="absolute inset-0 bg-black/50 dark:bg-black/80" onClick={onClose}></div>
+        <div className="absolute inset-0 bg-black/50 dark:bg-black/80" onClick={onClose} onTouchStart={onClose}></div>
 
         <div className="grid h-full w-full grid-cols-[10px_1fr_10px] overflow-y-auto grid-rows-[minmax(10px,_1fr)_auto_minmax(10px,_1fr)] md:grid-rows-[minmax(20px,_1fr)_auto_minmax(20px,_1fr)]">
           <Transition.Child

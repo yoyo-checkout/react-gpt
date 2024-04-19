@@ -9,6 +9,7 @@ export type MittEventType = {
   scroll2Bottom: undefined
   toggleSidebar: undefined
   openSettingDialog: undefined
+  openFeatureDisabledDialog: undefined
 }
 
 export const mittBus = mitt<MittEventType>()

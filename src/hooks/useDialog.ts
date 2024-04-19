@@ -11,7 +11,6 @@ export const useDialog = (event: keyof MittEventType) => {
     setVisible(true)
   }
   const closeDialog = () => {
-    console.log(event)
     if (visibleDialogs.slice(-1)[0] !== event) return
     setVisible(false)
     visibleDialogs.pop()
