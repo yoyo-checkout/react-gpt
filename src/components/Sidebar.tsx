@@ -8,15 +8,15 @@ import { Logo } from '@/components/image/Logo'
 import { More } from '@/components/image/More'
 import { Seal } from '@/components/image/Seal'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
+import { useChatStore } from '@/hooks/useChatStore'
 import { mittBus } from '@/plugins/mitt'
-import { TChat } from '@/types'
 
 interface Props {
-  chats: TChat[]
   visible: boolean
 }
 
-export const Sidebar: FC<Props> = ({ chats, visible }) => {
+export const Sidebar: FC<Props> = ({ visible }) => {
+  const { chats } = useChatStore()
   const chatsGroupByTime = useMemo(() => {
     const sortedChats = orderBy(chats, (e) => e.create_at, 'desc')
     return groupBy(sortedChats, (c) => dayjs(c.create_at).fromNow())

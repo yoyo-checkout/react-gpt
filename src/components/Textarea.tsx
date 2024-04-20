@@ -1,38 +1,48 @@
 import { chunk } from 'lodash-es'
 import { ChangeEvent, useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { prompts } from '@/configs/prompts'
 import { defaultReply } from '@/configs/replies'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
+import { useChatStore } from '@/hooks/useChatStore'
 import { mittBus } from '@/plugins/mitt'
-import { TPrompt } from '@/types'
+import { TChat, TMessage, TPrompt } from '@/types'
 
 const Prompts = () => {
   const breakpoint = useBreakpoint()
   const promptChunks = useMemo(() => chunk(prompts.slice(breakpoint === 'sm' ? -2 : -4), 2), [breakpoint])
 
-  function createChat(prompt: TPrompt) {
-    mittBus.emit('createChat', {
-      chat: {
-        id: uuidv4(),
-        name: prompt.title,
-        create_at: new Date().getTime(),
-        status: 'available',
-        conversations: [
-          {
-            owner: 'user',
-            messages: [
-              {
-                type: 'text',
-                content: prompt.content,
-              },
-            ],
-          },
-        ],
-      },
-      botReplies: prompt.replies,
-    })
+  const { createChat: _createChat } = useChatStore()
+  const navigate = useNavigate()
+
+  const createChat = (prompt: TPrompt) => {
+    const chat = {
+      id: uuidv4(),
+      name: prompt.title,
+      create_at: new Date().getTime(),
+      status: 'available',
+      conversations: [
+        {
+          owner: 'user',
+          messages: [
+            {
+              type: 'text',
+              content: prompt.content,
+            },
+          ],
+        },
+      ],
+    } as TChat
+    _createChat(chat)
+    navigate(`/c/${chat.id}`)
+    mittBus.emit('scroll2Bottom')
+
+    // await sleep(50)
+    // mittBus.emit('createConversation', {
+    //   owner: 'bot',
+    //   messages: botReplies,
+    // })
   }
 
   return (
@@ -99,6 +109,9 @@ export const Textarea = () => {
   const [prompt, setPrompt] = useState('')
   const [isBotTyping, setIsBotTyping] = useState(false)
 
+  const { createChat: _createChat } = useChatStore()
+  const navigate = useNavigate()
+
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(() => e.target.value)
   }
@@ -111,26 +124,25 @@ export const Textarea = () => {
         messages: [{ type: 'text', content: prompt }],
       })
     } else {
-      mittBus.emit('createChat', {
-        chat: {
-          id: uuidv4(),
-          name: prompt,
-          create_at: new Date().getTime(),
-          status: 'available',
-          conversations: [
-            {
-              owner: 'user',
-              messages: [
-                {
-                  type: 'text',
-                  content: prompt,
-                },
-              ],
-            },
-          ],
-        },
-        botReplies: [defaultReply],
-      })
+      const chat = {
+        id: uuidv4(),
+        name: prompt,
+        create_at: new Date().getTime(),
+        status: 'available',
+        conversations: [
+          {
+            owner: 'user',
+            messages: [
+              {
+                type: 'text',
+                content: prompt,
+              },
+            ],
+          },
+        ],
+      } as TChat
+      _createChat(chat)
+      navigate(`/c/${chat.id}`)
     }
 
     mittBus.emit('scroll2Bottom')

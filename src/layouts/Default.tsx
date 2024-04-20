@@ -1,24 +1,17 @@
 import { throttle } from 'lodash-es'
 import { useEffect, useRef, useState } from 'react'
-import { Outlet, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 import { useScroll, useToggle } from 'react-use'
 import { FeatureDisabledDialog } from '@/components/Dialog/FeatureDisabled'
 import { SettingDialog } from '@/components/Dialog/Setting'
 import { Header } from '@/components/Header'
 import { Sidebar } from '@/components/Sidebar'
 import { Textarea } from '@/components/Textarea'
-import { chats as _chats } from '@/configs/chats'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
-import { useInit } from '@/hooks/useInit'
 import { mittBus } from '@/plugins/mitt'
-import { TChat, TMessage } from '@/types'
-import { sleep } from '@/utils/index'
 
 export const Layout = () => {
   const params = useParams()
-  const navigate = useNavigate()
-
-  const [chats, setChats] = useState(_chats)
 
   const containerRef = useRef<HTMLDivElement | null>(null)
   const scrollBottomRef = useRef<HTMLDivElement | null>(null)
@@ -38,21 +31,6 @@ export const Layout = () => {
   }
 
   const throttlSetScrollBottomBtnVisible = throttle((v: boolean) => setScrollBottomBtnVisible(v), 300)
-
-  const createChat = async ({ chat, botReplies }: { chat: TChat; botReplies: TMessage[] }) => {
-    setChats([...chats, chat])
-    navigate(`/c/${chat.id}`)
-    scrollToBottom()
-
-    await sleep(50)
-    mittBus.emit('createConversation', {
-      owner: 'bot',
-      messages: botReplies,
-    })
-  }
-  const updateChat = (chat: TChat) => {
-    setChats(() => chats.map((item) => (item.id === chat.id ? chat : item)))
-  }
 
   useEffect(() => {
     if (breakpoint === 'sm') {
@@ -75,23 +53,13 @@ export const Layout = () => {
   }, [])
 
   useEffect(() => {
-    mittBus.on('createChat', createChat)
-    return () => mittBus.off('createChat', createChat)
-  }, [chats])
-
-  useEffect(() => {
-    mittBus.on('updateChat', updateChat)
-    return () => mittBus.off('updateChat', updateChat)
-  }, [chats])
-
-  useEffect(() => {
     mittBus.on('toggleSidebar', toggleSidebar)
     return () => mittBus.off('toggleSidebar', toggleSidebar)
   }, [])
 
   return (
     <div className="relative z-0 flex h-full w-full overflow-hidden">
-      <Sidebar chats={chats} visible={sidebarVisible} />
+      <Sidebar visible={sidebarVisible} />
       <div className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden">
         <Header />
 
@@ -172,7 +140,7 @@ export const Layout = () => {
                       ) : null}
                     </div>
 
-                    <Outlet context={chats} />
+                    <Outlet />
                     <div ref={scrollBottomRef}></div>
                   </div>
                   {scrollBottomBtnVisible ? (

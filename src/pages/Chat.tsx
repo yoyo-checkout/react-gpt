@@ -1,15 +1,16 @@
 import { useEffect } from 'react'
-import { Navigate, useOutletContext, useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { useLatest, useTitle } from 'react-use'
 import { Conversation } from '@/components/Chat/Conversation'
 import { replies } from '@/configs/replies'
+import { useChatStore } from '@/hooks/useChatStore'
 import { mittBus } from '@/plugins/mitt'
-import { TChat, TConversation, TMessage } from '@/types'
+import { TConversation, TMessage } from '@/types'
 import { getRandomItem } from '@/utils/index'
 import { replyLikeEventStream } from '@/utils/reply'
 
 export const Chat = () => {
-  const chats = useOutletContext<TChat[]>()
+  const { chats, updateChat } = useChatStore()
   const params = useParams()
   const _chat = chats.find((c) => c.id === params.id)
   const chat = useLatest(_chat)
@@ -28,7 +29,7 @@ export const Chat = () => {
       messages: [],
     })
 
-    mittBus.emit('updateChat', {
+    updateChat({
       ...chat.current!,
       conversations: newConversations,
     })
@@ -60,7 +61,7 @@ export const Chat = () => {
         lastConversation.messages.splice(-1, 1, newMessage)
       }
 
-      mittBus.emit('updateChat', {
+      updateChat({
         ...chat.current!,
         conversations: newConversations,
       })
