@@ -40,7 +40,8 @@ export function replyLikeEventStream<T extends TMessage>(
           return resolve(true)
         }
       }
-    } catch {
+    } catch (e) {
+      console.log(e)
       resolve(false)
     }
   })
