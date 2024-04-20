@@ -24,7 +24,6 @@ export const Layout = () => {
   const scrollBottomRef = useRef<HTMLDivElement | null>(null)
   const [scrollBottomBtnVisible, setScrollBottomBtnVisible] = useState(false)
 
-  useInit()
   const breakpoint = useBreakpoint()
   const { y } = useScroll(containerRef)
   const [sidebarVisible, toggleSidebar] = useToggle(breakpoint !== 'sm')
