@@ -19,7 +19,7 @@ export const Chat = () => {
 
   let mount = true
 
-  const createConversation = async (conversation: TConversation) => {
+  const createConversation = async ({ id, conversation }: { id: string; conversation: TConversation }) => {
     const isUserConversation = conversation.owner === 'user'
     const newConversations = chat.current!.conversations.slice()
 
@@ -37,29 +37,37 @@ export const Chat = () => {
     const botReplies = isUserConversation ? [getRandomItem(replies)] : conversation.messages
     mittBus.emit('botTypingState', true)
     for (let i = 0; i < botReplies.length; i++) {
-      if (!mount || params.id !== chat.current?.id) return stopBotReplyMessage()
-      await botReplyMessage(botReplies[i])
+      if (!mount || id !== chat.current?.id) return stopBotReplyMessage()
+      await botReplyMessage(id, botReplies[i])
     }
     mittBus.emit('botTypingState', false)
   }
 
-  const botReplyMessage = async (message: TMessage) => {
+  const botReplyMessage = async (id: string, message: TMessage) => {
     await replyLikeEventStream(message, (m, newLine) => {
-      if (!mount || params.id !== chat.current?.id) return stopBotReplyMessage()
+      if (!mount || id !== chat.current?.id) return stopBotReplyMessage()
 
-      const newConversations = chat.current!.conversations.slice()
-      const lastConversation = newConversations.slice(-1)[0]
-      const newMessage = {
-        type: message.type,
-        content: m,
-        ...(message.type === 'code' && { language: message.language }),
-      } as TMessage
+      const newConversations = chat.current!.conversations.map((c, index) => {
+        if (index !== chat.current!.conversations.length - 1) return c
 
-      if (newLine) {
-        lastConversation.messages.push(newMessage)
-      } else {
-        lastConversation.messages.splice(-1, 1, newMessage)
-      }
+        const newMessages = c.messages.slice()
+        const newMessage = {
+          type: message.type,
+          content: m,
+          ...(message.type === 'code' && { language: message.language }),
+        } as TMessage
+
+        if (newLine) {
+          newMessages.push(newMessage)
+        } else {
+          newMessages.splice(-1, 1, newMessage)
+        }
+
+        return {
+          owner: c.owner,
+          messages: newMessages,
+        }
+      })
 
       updateChat({
         ...chat.current!,
@@ -75,7 +83,7 @@ export const Chat = () => {
   useEffect(() => {
     mittBus.on('createConversation', createConversation)
     return () => mittBus.off('createConversation', createConversation)
-  }, [chat.current])
+  }, [])
 
   useEffect(() => {
     mount = true

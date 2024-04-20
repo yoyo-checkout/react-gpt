@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { chats as defaultChats } from '@/configs/chats'
-import { TChat, TMessage } from '@/types'
+import { TChat } from '@/types'
 
 interface State {
   chats: TChat[]

@@ -2,7 +2,7 @@ import mitt from 'mitt'
 import { TConversation } from '@/types'
 
 export type MittEventType = {
-  createConversation: TConversation
+  createConversation: { id: string; conversation: TConversation }
   botTypingState: boolean
   scroll2Bottom: undefined
   toggleSidebar: undefined

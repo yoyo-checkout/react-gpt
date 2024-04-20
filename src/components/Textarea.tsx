@@ -7,7 +7,8 @@ import { defaultReply } from '@/configs/replies'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 import { useChatStore } from '@/hooks/useChatStore'
 import { mittBus } from '@/plugins/mitt'
-import { TChat, TMessage, TPrompt } from '@/types'
+import { TChat, TPrompt } from '@/types'
+import { sleep } from '@/utils/index'
 
 const Prompts = () => {
   const breakpoint = useBreakpoint()
@@ -16,7 +17,7 @@ const Prompts = () => {
   const { createChat: _createChat } = useChatStore()
   const navigate = useNavigate()
 
-  const createChat = (prompt: TPrompt) => {
+  const createChat = async (prompt: TPrompt) => {
     const chat = {
       id: uuidv4(),
       name: prompt.title,
@@ -38,11 +39,11 @@ const Prompts = () => {
     navigate(`/c/${chat.id}`)
     mittBus.emit('scroll2Bottom')
 
-    // await sleep(50)
-    // mittBus.emit('createConversation', {
-    //   owner: 'bot',
-    //   messages: botReplies,
-    // })
+    await sleep(50)
+    mittBus.emit('createConversation', {
+      id: chat.id,
+      conversation: { owner: 'bot', messages: prompt.replies },
+    })
   }
 
   return (
@@ -120,8 +121,11 @@ export const Textarea = () => {
 
     if (params.id) {
       mittBus.emit('createConversation', {
-        owner: 'user',
-        messages: [{ type: 'text', content: prompt }],
+        id: params.id,
+        conversation: {
+          owner: 'user',
+          messages: [{ type: 'text', content: prompt }],
+        },
       })
     } else {
       const chat = {
@@ -143,6 +147,12 @@ export const Textarea = () => {
       } as TChat
       _createChat(chat)
       navigate(`/c/${chat.id}`)
+
+      await sleep(50)
+      mittBus.emit('createConversation', {
+        id: chat.id,
+        conversation: { owner: 'bot', messages: [defaultReply] },
+      })
     }
 
     mittBus.emit('scroll2Bottom')
