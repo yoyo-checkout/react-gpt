@@ -26,7 +26,7 @@ export type TChat = {
   id: string
   name: string
   create_at: number
-  status: 'available' | 'delete' | 'archive'
+  status: 'available' | 'archived'
   conversations: TConversation[]
 }
 

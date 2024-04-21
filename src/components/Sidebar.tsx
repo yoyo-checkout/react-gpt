@@ -10,17 +10,18 @@ import { Seal } from '@/components/image/Seal'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 import { useChatStore } from '@/hooks/useChatStore'
 import { mittBus } from '@/plugins/mitt'
+import { TChat } from '@/types'
 
 interface Props {
   visible: boolean
 }
 
 export const Sidebar: FC<Props> = ({ visible }) => {
-  const { chats } = useChatStore()
+  const { availableChats, updateChat, deleteChat } = useChatStore()
   const chatsGroupByTime = useMemo(() => {
-    const sortedChats = orderBy(chats, (e) => e.create_at, 'desc')
+    const sortedChats = orderBy(availableChats, (e) => e.create_at, 'desc')
     return groupBy(sortedChats, (c) => dayjs(c.create_at).fromNow())
-  }, [chats])
+  }, [availableChats])
   const breakpoint = useBreakpoint()
 
   const popupRef = useRef<HTMLDivElement | null>(null)
@@ -46,6 +47,10 @@ export const Sidebar: FC<Props> = ({ visible }) => {
         break
     }
     setPopupVisible(false)
+  }
+
+  const archiveChat = (chat: TChat) => {
+    updateChat({ ...chat, status: 'archived' })
   }
 
   return (
@@ -133,7 +138,7 @@ export const Sidebar: FC<Props> = ({ visible }) => {
                               </button>
                               <button
                                 className="flex items-center justify-center text-token-text-primary transition hover:text-token-text-secondary radix-state-open:text-token-text-secondary"
-                                onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                                onClick={() => archiveChat(chat)}
                               >
                                 <Seal className="icon-md" />
                               </button>

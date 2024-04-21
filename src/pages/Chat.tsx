@@ -10,9 +10,10 @@ import { getRandomItem } from '@/utils/index'
 import { replyLikeEventStream } from '@/utils/reply'
 
 export const Chat = () => {
-  const { chats, updateChat } = useChatStore()
   const params = useParams()
-  const _chat = chats.find((c) => c.id === params.id)
+
+  const { availableChats, updateChat } = useChatStore()
+  const _chat = availableChats.find((c) => c.id === params.id)
   const chat = useLatest(_chat)
 
   useTitle(chat.current?.name || 'React GPT')

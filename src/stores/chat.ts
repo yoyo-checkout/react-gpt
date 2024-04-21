@@ -18,7 +18,10 @@ const chatSlice = createSlice({
       state.chats.push(payload)
     },
     updateChat(state, { payload }: { payload: TChat }) {
-      state.chats = state.chats.map((item) => (item.id === payload.id ? payload : item))
+      state.chats = state.chats.map((chat) => (chat.id === payload.id ? payload : chat))
+    },
+    deleteChat(state, { payload }: { payload: string }) {
+      state.chats = state.chats.filter((chat) => chat.id !== payload)
     },
   },
 })
