@@ -13,6 +13,7 @@ export const useChatStore = () => {
   const dispatch: AppDispatch = useDispatch()
   const createChat = useCallback((chat: TChat) => dispatch(actions.createChat(chat)), [dispatch])
   const updateChat = useCallback((chat: TChat) => dispatch(actions.updateChat(chat)), [dispatch])
+  const deleteChat = useCallback((id: string) => dispatch(actions.deleteChat(id)), [dispatch])
 
   return {
     chats,
@@ -20,5 +21,6 @@ export const useChatStore = () => {
     archivedChats,
     createChat,
     updateChat,
+    deleteChat,
   }
 }

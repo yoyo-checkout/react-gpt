@@ -10,6 +10,9 @@ export default {
       white: 'rgb(var(--white) / <alpha-value>)',
       black: 'rgb(var(--black) / <alpha-value>)',
       'brand-purple': 'rgb(var(--brand-purple) / <alpha-value>)',
+      red: {
+        500: 'rgb(239 68 68 / <alpha-value>)',
+      },
       gray: {
         50: 'rgb(var(--gray-50) / <alpha-value>)',
         100: 'rgb(var(--gray-100) / <alpha-value>)',
