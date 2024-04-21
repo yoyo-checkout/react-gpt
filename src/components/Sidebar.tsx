@@ -1,7 +1,7 @@
 import { Popover } from '@headlessui/react'
 import dayjs from 'dayjs'
 import { groupBy, orderBy } from 'lodash-es'
-import { FC, useMemo, useRef, useState } from 'react'
+import { FC, MouseEvent as ReactMouseEvent, useMemo, useRef, useState } from 'react'
 import { usePopper } from 'react-popper'
 import { NavLink } from 'react-router-dom'
 import { useClickAway } from 'react-use'
@@ -36,6 +36,21 @@ const ListItem: FC<ListItemProps> = ({ chat }) => {
     updateChat({ ...chat, status: 'archived' })
   }
 
+  const handleClickAction = (e: ReactMouseEvent, action: 'share' | 'rename' | 'delete') => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    switch (action) {
+      case 'share':
+      case 'rename':
+        mittBus.emit('openFeatureDisabledDialog')
+        break
+      case 'delete':
+        deleteChat(chat.id)
+        break
+    }
+  }
+
   return (
     <li className="overflow-hidden">
       <div className="group rounded-lg active:opacity-90 hover:bg-token-sidebar-surface-secondary">
@@ -61,7 +76,7 @@ const ListItem: FC<ListItemProps> = ({ chat }) => {
               <div className="popover min-w-[200px] max-w-xs rounded-lg border border-token-border-light bg-token-main-surface-primary shadow-lg outline-none">
                 <div
                   className="flex items-center gap-2 m-1.5 rounded p-2.5 text-sm cursor-pointer focus:ring-0 hover:bg-token-main-surface-secondary radix-disabled:pointer-events-none radix-disabled:opacity-50 group"
-                  onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                  onClick={(e) => handleClickAction(e, 'share')}
                 >
                   <svg
                     width="24"
@@ -82,7 +97,7 @@ const ListItem: FC<ListItemProps> = ({ chat }) => {
                 </div>
                 <div
                   className="flex items-center gap-2 m-1.5 rounded p-2.5 text-sm cursor-pointer focus:ring-0 hover:bg-token-main-surface-secondary radix-disabled:pointer-events-none radix-disabled:opacity-50 group"
-                  onClick={() => mittBus.emit('openFeatureDisabledDialog')}
+                  onClick={(e) => handleClickAction(e, 'rename')}
                 >
                   <svg
                     width="24"
@@ -103,7 +118,7 @@ const ListItem: FC<ListItemProps> = ({ chat }) => {
                 </div>
                 <div
                   className="flex items-center gap-2 m-1.5 rounded p-2.5 text-sm cursor-pointer focus:ring-0 hover:bg-token-main-surface-secondary radix-disabled:pointer-events-none radix-disabled:opacity-50 group text-red-500"
-                  onClick={() => deleteChat(chat.id)}
+                  onClick={(e) => handleClickAction(e, 'delete')}
                 >
                   <svg
                     width="24"
